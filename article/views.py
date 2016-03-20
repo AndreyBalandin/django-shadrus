@@ -1,7 +1,7 @@
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http.response import HttpResponse
 from django.template.loader import get_template
-from article.models import Article, Comments
+from article.models import Article, Comment
 
 # Create your views here.
 
@@ -27,6 +27,6 @@ def article(request, id=1):
     article = get_object_or_404(Article, id=id)
     return render_to_response('article.html',
         {'article': article,
-         'comments': article.comments_set.all(),
+         'comments': article.comment_set.all(),
         })
 

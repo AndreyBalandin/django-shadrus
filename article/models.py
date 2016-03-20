@@ -1,21 +1,26 @@
 from django.db import models
 
-# Create your models here.
 class Article(models.Model):
+    title = models.CharField(max_length = 200)
+    text = models.TextField()
+    date = models.DateTimeField()
+    likes = models.IntegerField(default=0)
+
     class Meta:
         db_table = 'articles'
+        verbose_name = "Статья"
+        verbose_name_plural = "Статьи"
 
-    article_title = models.CharField(max_length = 200)
-    article_text = models.TextField()
-    article_date = models.DateTimeField()
-    article_likes = models.IntegerField(default=0)
+    def __str__(self):
+        return self.title
 
 
-class Comments(models.Model):
+class Comment(models.Model):
+    text = models.TextField(verbose_name = "Текст комментария")
+    article = models.ForeignKey(Article)
+
     class Meta:
         db_table = 'comments'
-
-    comments_text = models.TextField()
-    comments_article = models.ForeignKey(Article)
-
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
 
