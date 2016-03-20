@@ -1,7 +1,10 @@
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http.response import HttpResponse
 from django.template.loader import get_template
+from django.views.decorators.http import require_POST
+
 from article.models import Article, Comment
+from article.forms import CommentForm
 
 # Create your views here.
 
@@ -20,13 +23,29 @@ def template_three(request):
     return render_to_response('my_template.html', {'name': name})
 
 def articles(request):
-    return render_to_response('articles.html',
+    return render(request, 'articles.html',
         {'articles': Article.objects.all()})
 
 def article(request, id=1):
     article = get_object_or_404(Article, id=id)
-    return render_to_response('article.html',
+    return render(request, 'article.html',
         {'article': article,
          'comments': article.comment_set.all(),
+         'form': CommentForm(),
         })
 
+def addlike(request, id):
+    article = get_object_or_404(Article, id=id)
+    article.likes += 1
+    article.save()
+    return redirect('/')
+
+@require_POST
+def addcomment(request, id):
+    article = get_object_or_404(Article, id=id)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.article = article
+        comment.save()
+    return redirect('/articles/get/{}/'.format(id))

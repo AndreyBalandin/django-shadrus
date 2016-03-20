@@ -10,7 +10,7 @@
   <h6>Дата публикации: {{ article.date }}</h6>
   <h4><a href="/articles/get/{{ article.id }}/">{{ article.title }}</a></h4>
   <p>{{ article.text }}</p>
-  <p><img src="{% static 'icon-like.png' %}"> {{ article.likes }}</p>
+  <p><a href="/articles/addlike/{{ article.id }}/"><img src="{% static 'icon-like.png' %}"></a> {{ article.likes }}</p>
   <hr>
 {% endfor %}
 </div>

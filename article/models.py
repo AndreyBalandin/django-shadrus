@@ -16,7 +16,7 @@ class Article(models.Model):
 
 
 class Comment(models.Model):
-    text = models.TextField(verbose_name = "Текст комментария")
+    text = models.TextField(verbose_name='Текст комментария')
     article = models.ForeignKey(Article)
 
     class Meta:
