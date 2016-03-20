@@ -7,10 +7,12 @@
 <p>{{ article.text }}</p>
 <p>Понравилось: {{ article.likes }}</p>
 <hr>
+<div class="large-offset-1 columns">
 <h3>Комментарии:</h3>
 {% for comment in comments %}
   <p>{{ comment.text }}</p>
   <hr>
 {% endfor %}
+</div>
 
 {% endblock %}
