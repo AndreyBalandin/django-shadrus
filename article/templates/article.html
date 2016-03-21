@@ -14,11 +14,13 @@
   <hr>
 {% endfor %}
 
-<form method="post" action="/articles/addcomment/{{ article.id }}/">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="button">Отправить</button>
-</form>
+{% if username %}
+  <form method="post" action="/articles/addcomment/{{ article.id }}/">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="button">Отправить</button>
+  </form>
+{% endif %}
 
 </div>
 

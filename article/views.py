@@ -2,6 +2,7 @@ from django.shortcuts import render, render_to_response, get_object_or_404, redi
 from django.http.response import HttpResponse
 from django.template.loader import get_template
 from django.views.decorators.http import require_POST
+from django.contrib import auth
 
 from article.models import Article, Comment
 from article.forms import CommentForm
@@ -23,15 +24,18 @@ def template_three(request):
     return render_to_response('my_template.html', {'name': name})
 
 def articles(request):
-    return render(request, 'articles.html',
-        {'articles': Article.objects.all()})
+    return render(request, 'articles.html', {
+        'articles': Article.objects.all(),
+        'username': auth.get_user(request).username,
+        })
 
 def article(request, id=1):
     article = get_object_or_404(Article, id=id)
-    return render(request, 'article.html',
-        {'article': article,
-         'comments': article.comment_set.all(),
-         'form': CommentForm(),
+    return render(request, 'article.html', {
+        'article': article,
+        'comments': article.comment_set.all(),
+        'form': CommentForm(),
+        'username': auth.get_user(request).username,
         })
 
 def addlike(request, id):
