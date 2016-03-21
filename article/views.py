@@ -35,17 +35,26 @@ def article(request, id=1):
         })
 
 def addlike(request, id):
+    likes_article_id = list(eval(request.COOKIES.get('likes_article_id', '[]')))
+    if id in likes_article_id:  # если статью уже лайкали, то не прибавлять лайк
+        return redirect('/')
     article = get_object_or_404(Article, id=id)
     article.likes += 1
     article.save()
-    return redirect('/')
+    # поставить куку с нажатым лайком
+    response = redirect('/')
+    response.set_cookie('likes_article_id', likes_article_id + [id])
+    return response
 
 @require_POST
 def addcomment(request, id):
-    article = get_object_or_404(Article, id=id)
-    form = CommentForm(request.POST)
-    if form.is_valid():
-        comment = form.save(commit=False)
-        comment.article = article
-        comment.save()
+    if 'pause' not in request.session:
+        article = get_object_or_404(Article, id=id)
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.article = article
+            comment.save()
+            request.session.set_expiry(60)  # кука с сессией будет актуальна 1 минуту
+            request.session['pause'] = True # дополнительное значение в сессии
     return redirect('/articles/get/{}/'.format(id))
