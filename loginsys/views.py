@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import auth
+from django.contrib.auth.forms import UserCreationForm
 
 def login(request):
     if request.POST:
@@ -19,3 +20,17 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('/')
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password2']
+            user = auth.authenticate(username=username, password=password)
+            auth.login(request, user)
+            return redirect('/')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
