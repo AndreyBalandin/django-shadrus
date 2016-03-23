@@ -11,6 +11,7 @@
 <h3>Комментарии:</h3>
 {% for comment in comments %}
   <p>{{ comment.text }}</p>
+  <p>{{ comment.author }} {{ comment.date }}</p>
   <hr>
 {% endfor %}
 
