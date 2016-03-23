@@ -1,8 +1,9 @@
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http.response import HttpResponse
 from django.template.loader import get_template
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 from django.contrib import auth
+from django.core.paginator import Paginator
 
 from article.models import Article, Comment
 from article.forms import CommentForm
@@ -23,10 +24,16 @@ def template_three(request):
     name = 'template_three'
     return render_to_response('my_template.html', {'name': name})
 
-def articles(request):
+@require_GET
+def articles(request, page_num=1):
+    articles = Article.objects.all()
+    paginator = Paginator(articles, 2)
+    page = paginator.page(page_num)
     return render(request, 'articles.html', {
-        'articles': Article.objects.all(),
-        'username': auth.get_user(request).username,
+        'articles': page,
+        #'articles': articles,
+        #'paginator': paginator,
+        #'page': page,
         })
 
 def article(request, id=1):
